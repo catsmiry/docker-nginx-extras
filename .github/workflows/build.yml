@@ -8,7 +8,7 @@ on:
     branches: [ master ]
 
 env:
-  IMAGE_NAME: byjg/nginx-extras
+  IMAGE_NAME: ${{ github.event_name == 'pull_request' && 'byjg/nginx-extras' || format('{0}/byjg/nginx-extras}', secrets.DOCKER_REGISTRY) }}
 
 jobs:
   Build:
@@ -39,7 +39,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ secrets.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
