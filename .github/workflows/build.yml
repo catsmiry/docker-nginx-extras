@@ -17,6 +17,9 @@ jobs:
       contents: read
       packages: write
 
+    env:
+      DOCKER_IMAGE_BASE: ${{ github.event_name == 'pull_request' && env.IMAGE_NAME || format('{0}/{1}', secrets.DOCKER_REGISTRY, env.IMAGE_NAME) }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -39,7 +42,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ secrets.DOCKER_REGISTRY }}${{ env.IMAGE_NAME }}
+          images: ${{ env.DOCKER_IMAGE_BASE }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
