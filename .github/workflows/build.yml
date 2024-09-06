@@ -9,6 +9,7 @@ on:
 
 env:
   IMAGE_NAME: byjg/nginx-extras
+  DOCKER_IMAGE_BASE: ${{ github.event_name == 'pull_request' && env.IMAGE_NAME || format('{0}/{1}', secrets.DOCKER_REGISTRY, env.IMAGE_NAME) }}
 
 jobs:
   Build:
@@ -16,9 +17,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-
-    env:
-      DOCKER_IMAGE_BASE: ${{ github.event_name == 'pull_request' && env.IMAGE_NAME || format('{0}/{1}', secrets.DOCKER_REGISTRY, env.IMAGE_NAME) }}
 
     steps:
       - name: Checkout repository
