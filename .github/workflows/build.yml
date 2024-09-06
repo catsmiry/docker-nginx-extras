@@ -8,7 +8,7 @@ on:
     branches: [ master ]
 
 env:
-  IMAGE_NAME: ${{ github.event_name == 'pull_request' && 'byjg/nginx-extras' || format('{0}/byjg/nginx-extras}', secrets.DOCKER_REGISTRY) }}
+  IMAGE_NAME: ${{ github.event_name == 'pull_request' && 'byjg/nginx-extras' || format('{0}/byjg/nginx-extras', secrets.DOCKER_REGISTRY) }}
 
 jobs:
   Build:
