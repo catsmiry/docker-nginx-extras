@@ -1,13 +1,15 @@
-FROM alpine:3.18
+FROM alpine:3.20
 
 WORKDIR /var/www/html
 
-ENV NGINX_VERSION 1.25.0
-ENV MORE_SET_HEADER_VERSION 0.34
-ENV FANCYINDEX 0.5.2
+ENV NGINX_VERSION=1.26.2
+ENV MORE_SET_HEADER_VERSION=0.34
+ENV FANCYINDEX=0.5.2
+ENV MODULE_URL_BASE=https://nginx.org/packages/alpine/v3.20/main/x86_64/
+
 
 RUN mkdir -p /var/www/html \
-    && GPG_KEYS=13C82A63B603576156E30A4EA0EA981B66B0D967 \
+    && GPG_KEYS=D6786CE303D9A9022998DC6CC8464D549AF75C0A \
     && CONFIG="\
         --prefix=/etc/nginx \
         --sbin-path=/usr/sbin/nginx \
@@ -58,7 +60,7 @@ RUN mkdir -p /var/www/html \
     " \
     && addgroup -S nginx \
     && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
-    && apk add --no-cache --virtual .build-deps \
+    && apk add --no-cache --allow-untrusted --virtual .build-deps \
         git \
         gcc \
         libc-dev \
@@ -140,6 +142,9 @@ RUN mkdir -p /var/www/html \
             | sort -u \
     )" \
     && apk add --no-cache --virtual .nginx-rundeps $runDeps apache2-utils \
+    c-ares \
+    libstdc++ \
+    curl \
     && apk del --no-cache .build-deps \
     && apk del --no-cache .gettext \
     && mv /tmp/envsubst /usr/local/bin/ \
@@ -157,6 +162,14 @@ RUN mkdir -p /var/www/html \
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 COPY conf/nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+RUN wget -qO- $MODULE_URL_BASE | \
+    grep -o 'nginx-module-otel-[0-9\.]*-r[0-9]*\.apk' | \
+    sort -Vr | \
+    head -n 1 | \
+    xargs -I {} wget ${MODULE_URL_BASE}{} && \
+    tar -xzf ./nginx-module-otel-*.apk 
+RUN install -m755 /var/www/html/usr/lib/nginx/modules/ngx_otel_module.so /etc/nginx/modules/ngx_otel_module.so && \
+    rm nginx-module-otel-*.apk
 
 EXPOSE 80 443
 STOPSIGNAL SIGQUIT
