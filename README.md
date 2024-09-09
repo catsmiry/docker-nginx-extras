@@ -11,7 +11,8 @@ this container is based on Alpine Linux and the nginx is compiled from the sourc
 
 ## Tags
 
-* 1.25, latest
+* 1.26, latest
+* 1.25
 * 1.24
 * 1.23
 * 1.22
@@ -37,7 +38,7 @@ Split Clients, SSI, Upstream, User ID, UWSGI.
 
 ## OPTIONAL HTTP MODULES
 
-Addition, Debug, Embedded Perl, FLV, GeoIP,
+Addition, Debug, Embedded Perl, FLV, GeoIP, Open Telemetry (Otel),
 Gzip Precompression, Image Filter, IPv6, MP4, Random Index, Real IP,
 Secure Link, Spdy, SSL, Stub Status, Substitution, WebDAV, XSLT.
 
