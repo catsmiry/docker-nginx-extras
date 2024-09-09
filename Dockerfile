@@ -2,10 +2,10 @@ FROM alpine:3.20
 
 WORKDIR /var/www/html
 
-ENV NGINX_VERSION 1.26.2
-ENV MORE_SET_HEADER_VERSION 0.34
-ENV FANCYINDEX 0.5.2
-ENV MODULE_URL_BASE https://nginx.org/packages/alpine/v3.20/main/x86_64/
+ENV NGINX_VERSION=1.26.2
+ENV MORE_SET_HEADER_VERSION=0.34
+ENV FANCYINDEX=0.5.2
+ENV MODULE_URL_BASE=https://nginx.org/packages/alpine/v3.20/main/x86_64/
 
 
 RUN mkdir -p /var/www/html \
@@ -61,7 +61,6 @@ RUN mkdir -p /var/www/html \
     && addgroup -S nginx \
     && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
     && apk add --no-cache --allow-untrusted --virtual .build-deps \
-        bash \
         git \
         gcc \
         libc-dev \
